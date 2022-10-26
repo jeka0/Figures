@@ -1,0 +1,10 @@
+D:\Visual studio\Figures\Figures\bin\Debug\Figures.exe.config
+D:\Visual studio\Figures\Figures\bin\Debug\Figures.exe
+D:\Visual studio\Figures\Figures\bin\Debug\Figures.pdb
+D:\Visual studio\Figures\Figures\obj\Debug\Figures.csproj.AssemblyReference.cache
+D:\Visual studio\Figures\Figures\obj\Debug\Figures.Form1.resources
+D:\Visual studio\Figures\Figures\obj\Debug\Figures.Properties.Resources.resources
+D:\Visual studio\Figures\Figures\obj\Debug\Figures.csproj.GenerateResource.cache
+D:\Visual studio\Figures\Figures\obj\Debug\Figures.csproj.CoreCompileInputs.cache
+D:\Visual studio\Figures\Figures\obj\Debug\Figures.exe
+D:\Visual studio\Figures\Figures\obj\Debug\Figures.pdb
