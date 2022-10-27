@@ -15,39 +15,60 @@ namespace Figures
         {
             this.image = image;
         }
+        private void Swap(ref Point point1, ref Point point2)
+        {
+            Point swapPoint = point1;
+            point1 = point2;
+            point2 = swapPoint;
+        }
         public void DarwLine(Point point1, Point point2, Color color)
         {
             bool flag = true;
-            if (point1.X > point2.X || (point1.X == point2.X && point1.Y > point2.Y))
+            if (point1.X > point2.X/* || (point1.X == point2.X && point1.Y > point2.Y)*/) Swap(ref point1, ref point2);
+            int X1 = point1.X, X2 = point2.X, Y1 = point1.Y, Y2 = point2.Y;
+            if (Math.Abs(X2 - X1) < Math.Abs(Y2 - Y1)) 
             {
-                Point swapPoint = point1;
-                point1 = point2;
-                point2 = swapPoint;
+                flag = false;
+                if (point2.Y < point1.Y) Swap(ref point1, ref point2);
+                X1 = point1.Y; X2 = point2.Y;
+                Y1 = point1.X; Y2 = point2.X;
             }
-            if (point1.Y == point2.Y) for (int i = point1.X; i <= point2.X; i++) DrawPoint(i, point1.Y, color);
-            else
-                if (point1.X == point2.X) for (int i = point1.Y; i <= point2.Y; i++) DrawPoint(point1.X, i, color);
-            else
+            for (int i = X1; i <= X2; i++)
             {
-                int X1 = point1.X, X2 = point2.X, Y1 = point1.Y, Y2 = point2.Y;
-                if (Math.Abs(X2 - X1) < Math.Abs(Y2 - Y1)) 
-                {
-                    flag = false;
-                    if (point2.Y < point1.Y)
-                    {
-                        Point swapPoint = point1;
-                        point1 = point2;
-                        point2 = swapPoint;
-                    }
-                    X1 = point1.Y; X2 = point2.Y;
-                    Y1 = point1.X; Y2 = point2.X;
-                }
-                for (int i = X1; i <= X2; i++)
-                {
-                    int j = (i - X1) * (Y2 - Y1) / (X2 - X1) + Y1;
-                    if(flag)DrawPoint(i, j, color);else DrawPoint(j, i, color);
-                }
+                int j = (i - X1) * (Y2 - Y1) / (X2 - X1) + Y1;
+                if(flag)DrawPoint(i, j, color);else DrawPoint(j, i, color);
             }
+        }
+
+        public void DrawCircle(Point point, int radius, Color color)
+        {
+            int x = 0;
+            int y = radius;
+            int delta = 1 - 2 * radius;
+            int error = 0;
+            while (y >= x)
+            {
+                DrawPoint(point.X + x, point.Y + y, Color.Black);
+                DrawPoint(point.X + x, point.Y - y, Color.Black);
+                DrawPoint(point.X - x, point.Y + y, Color.Black);
+                DrawPoint(point.X - x, point.Y - y, Color.Black);
+                DrawPoint(point.X + y, point.Y + x, Color.Black);
+                DrawPoint(point.X + y, point.Y - x, Color.Black);
+                DrawPoint(point.X - y, point.Y + x, Color.Black);
+                DrawPoint(point.X - y, point.Y - x, Color.Black);
+                error = 2 * (delta + y) - 1;
+                if ((delta < 0) && (error <= 0))
+                {
+                    delta += 2 * ++x + 1;
+                    continue;
+                }
+                if ((delta > 0) && (error > 0))
+                {
+                    delta -= 2 * --y + 1;
+                    continue;
+                }
+                delta += 2 * (++x - --y);
+             }
         }
         public void DrawPolygon(Color color, params Point[] points)
         {

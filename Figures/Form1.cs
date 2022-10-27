@@ -31,7 +31,7 @@ namespace Figures
             label.Location = new Point(3, indent);
             label.Size = new Size(26,22);
             label.Text = "P" + (points.Count+1).ToString();
-            FormPoint point = new FormPoint(label, createTextBox(29, indent), createTextBox(77, indent));
+            FormPoint point = new FormPoint(label, createTextBox(43, indent), createTextBox(105, indent));
             points.Add(point);
             panel.Controls.Add(point.label);
             panel.Controls.Add(point.X);
@@ -42,7 +42,7 @@ namespace Figures
         {
             TextBox textBox = new TextBox();
             textBox.Location = new Point(x, y);
-            textBox.Size = new Size(38, 22);
+            textBox.Size = new Size(50, 22);
             return textBox;
 
 
@@ -71,6 +71,7 @@ namespace Figures
             List<Point> nowPoints = new List<Point>();
             foreach (FormPoint point in points) if (point.tryGetPoint(out Point nowPoint)) nowPoints.Add(nowPoint); else return;
             MyDrawing drawing = new MyDrawing(new Bitmap(pictureBox1.Width, pictureBox1.Height));
+            //drawing.DrawCircle(new Point(200, 200), 100, Color.Black);
             if (nowPoints.Count == 2) drawing.DarwLine(nowPoints[0], nowPoints[1], Color.Black);
             else drawing.DrawPolygon(Color.Black, nowPoints.ToArray());
             pictureBox1.Image = drawing.image;
