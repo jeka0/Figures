@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Figures
 {
@@ -16,12 +17,18 @@ namespace Figures
         private List<FormPoint> points;
         private Color color;
         private Bitmap image;
+        private Thread thread;
+        public void setImage(Bitmap image)
+        {
+            pictureBox1.Invoke(new Action(() => pictureBox1.Image = image));
+        }
         public Form1()
         {
             InitializeComponent();
             points = new List<FormPoint>();
             color = Color.Black;
             image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            thread = null;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -73,31 +80,52 @@ namespace Figures
 
         private void drawButt_Click(object sender, EventArgs e)
         {
-            MyDrawing drawing = new MyDrawing(new Bitmap(pictureBox1.Width, pictureBox1.Height));
-            if (tabControl1.SelectedTab == tabPage1)
+            if (thread == null)
             {
-                List<Point> nowPoints = new List<Point>();
-                foreach (FormPoint point in points) if (point.tryGetPoint(out Point nowPoint)) nowPoints.Add(nowPoint); else return;
-                if (nowPoints.Count == 2) drawing.DarwLine(nowPoints[0], nowPoints[1], color);
-                else drawing.DrawPolygon(color, nowPoints.ToArray());
-            }else if(tabControl1.SelectedTab == tabPage2)
-            {
-                FormPoint point = new FormPoint(null, textCircleX, textCircleY);
-                if (point.tryGetPoint(out Point newPoint) && int.TryParse(textCircleRadius.Text, out int R))
+                MyDrawing drawing = new MyDrawing(new Bitmap(pictureBox1.Width, pictureBox1.Height));
+                if (tabControl1.SelectedTab == tabPage1)
                 {
-                    drawing.DrawCircle(newPoint, R, color);
+                    List<Point> nowPoints = new List<Point>();
+                    foreach (FormPoint point in points) if (point.tryGetPoint(out Point nowPoint)) nowPoints.Add(nowPoint); else return;
+                    if (nowPoints.Count == 2) drawing.DarwLine(nowPoints[0], nowPoints[1], color);
+                    else drawing.DrawPolygon(color, nowPoints.ToArray());
                 }
-            }else if(tabControl1.SelectedTab == tabPage3)
-            {
-                FormPoint point = new FormPoint(null, textEllipsX, textEllipsY);
-                if (point.tryGetPoint(out Point newPoint) && int.TryParse(textEllipsB.Text, out int B) && int.TryParse(textEllipsM.Text, out int M))
+                else if (tabControl1.SelectedTab == tabPage2)
                 {
-                    drawing.DrawEllipse(newPoint, B, M, color);
+                    FormPoint point = new FormPoint(null, textCircleX, textCircleY);
+                    if (point.tryGetPoint(out Point newPoint) && int.TryParse(textCircleRadius.Text, out int R))
+                    {
+                        drawing.DrawCircle(newPoint, R, color);
+                    }
                 }
+                else if (tabControl1.SelectedTab == tabPage3)
+                {
+                    FormPoint point = new FormPoint(null, textEllipsX, textEllipsY);
+                    if (point.tryGetPoint(out Point newPoint) && int.TryParse(textEllipsB.Text, out int B) && int.TryParse(textEllipsM.Text, out int M))
+                    {
+                        drawing.DrawEllipse(newPoint, B, M, color);
+                    }
+                }
+                else if (tabControl1.SelectedTab == tabPage4)
+                {
+                    FormPoint point = new FormPoint(null, textModelX, textModelY);
+                    if (point.tryGetPoint(out Point newPoint) && int.TryParse(textModelL1.Text, out int L1) && L1>0 && int.TryParse(textOffsetL1.Text, out int OffsetL1)
+                        && OffsetL1>=0&& OffsetL1 < L1 && int.TryParse(textSpeedL1.Text, out int SpeedL1) && SpeedL1>0 && SpeedL1<=100 && int.TryParse(textModelL2.Text, out int L2) 
+                        && L2 >0 && int.TryParse(textSpeedL2.Text, out int SpeedL2) && SpeedL2 > 0 && SpeedL2 <= 100 && int.TryParse(textOffsetL2.Text, out int OffsetL2)&&
+                        OffsetL1 >=-L2/2 && OffsetL1 <= L2/2 )
+                    {
+                        Model model = new Model(this, drawing, newPoint, L1, radioButtonRight.Checked, OffsetL1, SpeedL1,
+                            L2, radioButtonRight2.Checked, OffsetL2, SpeedL2);
+                        model.color = color;
+                        thread = new Thread(model.run);
+                        thread.Start();
+                    }
+                }
+
+                this.image = drawing.image;
+                pictureBox1.Image = drawing.image;
             }
-                  
-            this.image = drawing.image;
-            pictureBox1.Image = drawing.image;
+            else { thread.Abort(); thread = null; }
         }
 
         private void buttonColor_Click(object sender, EventArgs e)
@@ -118,6 +146,11 @@ namespace Figures
                 this.image = drawing.image;
                 pictureBox1.Image = drawing.image;
             }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(thread!=null) thread.Abort();
         }
     }
 }

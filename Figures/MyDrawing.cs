@@ -10,7 +10,7 @@ namespace Figures
 {
     public class MyDrawing
     {
-        public Bitmap image { get; }
+        public Bitmap image { get; set; }
         public MyDrawing(Bitmap image)
         {
             this.image = image;
@@ -47,7 +47,6 @@ namespace Figures
             points.Enqueue(point); image.SetPixel(point.X, point.Y, color);
             while (points.Count != 0)
             {
-                Console.WriteLine(points.Count);
                 Point nowPoint = points.Dequeue();
                 if (isTrue(nowPoint.X - 1, nowPoint.Y, oldColor)) { image.SetPixel(nowPoint.X-1, nowPoint.Y, color); points.Enqueue(new Point(nowPoint.X - 1, nowPoint.Y)); }
                 if (isTrue(nowPoint.X + 1, nowPoint.Y, oldColor)) { image.SetPixel(nowPoint.X+1, nowPoint.Y, color); points.Enqueue(new Point(nowPoint.X + 1, nowPoint.Y)); }
