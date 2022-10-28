@@ -22,6 +22,8 @@ namespace Figures
         {
             pictureBox1.Invoke(new Action(() => pictureBox1.Image = image));
         }
+        public int getW() { return pictureBox1.Width; }
+        public int getH() { return pictureBox1.Height; }
         public Form1()
         {
             InitializeComponent();
@@ -112,9 +114,9 @@ namespace Figures
                     if (point.tryGetPoint(out Point newPoint) && int.TryParse(textModelL1.Text, out int L1) && L1>0 && int.TryParse(textOffsetL1.Text, out int OffsetL1)
                         && OffsetL1>=0&& OffsetL1 < L1 && int.TryParse(textSpeedL1.Text, out int SpeedL1) && SpeedL1>0 && SpeedL1<=100 && int.TryParse(textModelL2.Text, out int L2) 
                         && L2 >0 && int.TryParse(textSpeedL2.Text, out int SpeedL2) && SpeedL2 > 0 && SpeedL2 <= 100 && int.TryParse(textOffsetL2.Text, out int OffsetL2)&&
-                        OffsetL1 >=-L2/2 && OffsetL1 <= L2/2 )
+                        OffsetL2 >=-L2/2 && OffsetL2 <= L2/2 )
                     {
-                        Model model = new Model(this, drawing, newPoint, L1, radioButtonRight.Checked, OffsetL1, SpeedL1,
+                        Model model = new Model(this, newPoint, L1, radioButtonRight.Checked, OffsetL1, SpeedL1,
                             L2, radioButtonRight2.Checked, OffsetL2, SpeedL2);
                         model.color = color;
                         thread = new Thread(model.run);
@@ -151,6 +153,58 @@ namespace Figures
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if(thread!=null) thread.Abort();
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            indent = 3;
+            foreach (FormPoint point in points)
+            {
+                panel.Controls.Remove(point.label);
+                panel.Controls.Remove(point.X);
+                panel.Controls.Remove(point.Y);
+            }
+            points.Clear();
+            AddPoint();
+            AddPoint();
+            AddPoint();
+            AddPoint();
+            points[0].X.Text = "100"; points[0].Y.Text = "100";
+            points[1].X.Text = "200"; points[1].Y.Text = "100";
+            points[2].X.Text = "200"; points[2].Y.Text = "200";
+            points[3].X.Text = "100"; points[3].Y.Text = "200";
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            indent = 3;
+            foreach(FormPoint point in points)
+            {
+                panel.Controls.Remove(point.label);
+                panel.Controls.Remove(point.X);
+                panel.Controls.Remove(point.Y);
+            }
+            points.Clear();
+            AddPoint();
+            AddPoint();
+        }
+
+        private void radioButton5_CheckedChanged(object sender, EventArgs e)
+        {
+            indent = 3;
+            foreach (FormPoint point in points)
+            {
+                panel.Controls.Remove(point.label);
+                panel.Controls.Remove(point.X);
+                panel.Controls.Remove(point.Y);
+            }
+            points.Clear();
+            AddPoint();
+            AddPoint();
+            AddPoint();
+            points[0].X.Text = "100"; points[0].Y.Text = "100";
+            points[1].X.Text = "200"; points[1].Y.Text = "100";
+            points[2].X.Text = "150"; points[2].Y.Text = "200";
         }
     }
 }

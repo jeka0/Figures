@@ -64,42 +64,42 @@ namespace Figures
         }
         public void DrawEllipse(Point point, int semiMajorAxis, int semiMinorAxis, Color color)
         {
-            int x = 0; // Компонента x
-            int y = semiMinorAxis; // Компонента y
-            int a_sqr = semiMajorAxis * semiMajorAxis; // a^2, a - большая полуось
-            int b_sqr = semiMinorAxis * semiMinorAxis; // b^2, b - малая полуось
-            int delta = 4 * b_sqr * ((x + 1) * (x + 1)) + a_sqr * ((2 * y - 1) * (2 * y - 1)) - 4 * a_sqr * b_sqr; // Функция координат точки (x+1, y-1/2)
-            while (a_sqr * (2 * y - 1) > 2 * b_sqr * (x + 1)) // Первая часть дуги
+            int x = 0;
+            int y = semiMinorAxis;
+            int a_sqr = semiMajorAxis * semiMajorAxis;
+            int b_sqr = semiMinorAxis * semiMinorAxis;
+            int delta = 4 * b_sqr * ((x + 1) * (x + 1)) + a_sqr * ((2 * y - 1) * (2 * y - 1)) - 4 * a_sqr * b_sqr;
+            while (a_sqr * (2 * y - 1) > 2 * b_sqr * (x + 1))
             {
                 DrawPoint(point.X + x, point.Y + y, color);
                 DrawPoint(point.X + x, point.Y - y, color);
                 DrawPoint(point.X - x, point.Y - y, color);
                 DrawPoint(point.X - x, point.Y + y, color);
-                if (delta < 0) // Переход по горизонтали
+                if (delta < 0)
                 {
                     x++;
                     delta += 4 * b_sqr * (2 * x + 3);
                 }
-                else // Переход по диагонали
+                else 
                 {
                     x++;
                     delta = delta - 8 * a_sqr * (y - 1) + 4 * b_sqr * (2 * x + 3);
                     y--;
                 }
             }
-            delta = b_sqr * ((2 * x + 1) * (2 * x + 1)) + 4 * a_sqr * ((y + 1) * (y + 1)) - 4 * a_sqr * b_sqr; // Функция координат точки (x+1/2, y-1)
-            while (y + 1 != 0) // Вторая часть дуги, если не выполняется условие первого цикла, значит выполняется a^2(2y - 1) <= 2b^2(x + 1)
+            delta = b_sqr * ((2 * x + 1) * (2 * x + 1)) + 4 * a_sqr * ((y + 1) * (y + 1)) - 4 * a_sqr * b_sqr;
+            while (y + 1 != 0)
             {
                 DrawPoint(point.X + x, point.Y + y, color);
                 DrawPoint(point.X + x, point.Y - y, color);
                 DrawPoint(point.X - x, point.Y - y, color);
                 DrawPoint(point.X - x, point.Y + y, color);
-                if (delta < 0) // Переход по вертикали
+                if (delta < 0)
                 {
                     y--;
                     delta += 4 * a_sqr * (2 * y + 3);
                 }
-                else // Переход по диагонали
+                else
                 {
                     y--;
                     delta = delta - 8 * b_sqr * (x + 1) + 4 * a_sqr * (2 * y + 3);
